@@ -1,0 +1,5 @@
+include requirements.txt
+include README.md
+include LICENSE
+include whisper/assets/*
+include whisper/normalizers/english.json
