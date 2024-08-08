@@ -1,0 +1,4 @@
+submodules/demucs
+submodules/whisper
+submodules/whisperX
+submodules/TTS

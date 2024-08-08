@@ -1,0 +1,39 @@
+# PyTorch and its dependencies
+# These libraries include PyTorch and its related packages, supporting CUDA 11.8.
+# --extra-index-url https://download.pytorch.org/whl/cu118
+# torch
+# torchvision
+# torchaudio
+
+gradio
+loguru
+yt-dlp
+scipy
+python-dotenv
+openai
+audiostretchy
+modelscope
+
+# ASR
+# git+https://github.com/m-bain/whisperx.git
+# git+https://github.com/facebookresearch/demucs#egg=demucs
+funasr
+
+# googletrans
+
+# Qwen
+accelerate
+
+# CoxyVoice
+HyperPyYAML==1.2.2
+librosa==0.10.2
+WeTextProcessing==1.0.3
+wget==3.2
+# openai-whisper==20231117
+modelscope
+diffusers==0.27.2
+gdown==5.1.0
+pyarrow
+conformer==0.3.2
+lightning==2.2.4
+# ctranslate2==3.24.0
