@@ -1,0 +1,20 @@
+[build-system]
+requires = [
+    "setuptools",
+    "wheel",
+    "cython~=0.29.30",
+    "numpy>=1.22.0",
+    "packaging",
+]
+
+[flake8]
+max-line-length=120
+
+[tool.black]
+line-length = 120
+target-version = ['py39']
+
+[tool.isort]
+line_length = 120
+profile = "black"
+multi_line_output = 3
