@@ -12,19 +12,25 @@
 
 ---
 
-<details>
+<details open>
 <summary>目录</summary>
 <!-- TOC -->
-
 
 - [智能视频多语言AI配音/翻译工具 - Linly-Dubbing — “AI赋能，语言无界”](#智能视频多语言ai配音翻译工具---linly-dubbing--ai赋能语言无界)
   - [介绍](#介绍)
   - [TO DO LIST](#to-do-list)
   - [示例](#示例)
   - [安装与使用指南](#安装与使用指南)
+    - [测试环境](#测试环境)
+    - [1. 克隆代码仓库](#1-克隆代码仓库)
+    - [2. 安装依赖环境](#2-安装依赖环境)
+    - [3. 配置环境变量](#3-配置环境变量)
+    - [4. 运行程序](#4-运行程序)
   - [详细功能和技术细节](#详细功能和技术细节)
     - [自动下载视频](#自动下载视频)
     - [人声分离](#人声分离)
+      - [Demucs](#demucs)
+      - [UVR5](#uvr5)
     - [AI 智能语音识别](#ai-智能语音识别)
       - [WhisperX](#whisperx)
       - [FunASR](#funasr)
@@ -36,6 +42,7 @@
       - [Edge TTS](#edge-tts)
       - [XTTS](#xtts)
       - [CosyVoice](#cosyvoice)
+      - [GPT-SoVITS](#gpt-sovits)
     - [视频处理](#视频处理)
     - [数字人对口型技术](#数字人对口型技术)
   - [许可协议](#许可协议)
