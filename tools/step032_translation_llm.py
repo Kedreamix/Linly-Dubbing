@@ -9,7 +9,7 @@ from loguru import logger
 
 load_dotenv()
 device = 'cuda'
-model_name = os.getenv('MODEL_NAME', 'Qwen/Qwen1.5-7B-Chat')
+model_name = os.getenv('MODEL_NAME', 'Qwen/Qwen1.5-1.8B-Chat')
 # print(f'using model {model_name}')
 model = None
 tokenizer = None

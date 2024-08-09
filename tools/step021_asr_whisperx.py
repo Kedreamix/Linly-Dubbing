@@ -23,7 +23,7 @@ def init_whisperx():
     load_align_model()
     load_diarize_model()
     
-def load_whisper_model(model_name: str = 'large-v3', download_root = 'models/ASR/whisper', device='auto'):
+def load_whisper_model(model_name: str = 'large', download_root = 'models/ASR/whisper', device='auto'):
     if model_name == 'large':
         pretrain_model = os.path.join(download_root,"faster-whisper-large-v3")
         model_name = 'large-v3' if not os.path.isdir(pretrain_model) else pretrain_model
@@ -39,7 +39,7 @@ def load_whisper_model(model_name: str = 'large-v3', download_root = 'models/ASR
     t_end = time.time()
     logger.info(f'Loaded WhisperX model: {model_name} in {t_end - t_start:.2f}s')
 
-def load_align_model(language='en', device='auto'):
+def load_align_model(language='en', device='auto', model_dir='models/ASR/whisper'):
     global align_model, language_code, align_metadata
     if align_model is not None and language_code == language:
         return
@@ -48,7 +48,7 @@ def load_align_model(language='en', device='auto'):
     language_code = language
     t_start = time.time()
     align_model, align_metadata = whisperx.load_align_model(
-        language_code=language_code, device=device)
+        language_code=language_code, device=device, model_dir = model_dir)
     t_end = time.time()
     logger.info(f'Loaded alignment model: {language_code} in {t_end - t_start:.2f}s')
     

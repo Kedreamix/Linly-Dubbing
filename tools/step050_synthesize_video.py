@@ -186,14 +186,14 @@ def synthesize_video(folder, subtitles=True, speed_up=1.00, fps=30, resolution='
 
     if subtitles:
         final_video_with_subtitles = final_video.replace('.mp4', '_subtitles.mp4')
-        add_subtitles(final_video, srt_path, final_video_with_subtitles, 'ffmpeg')
+        add_subtitles(final_video, srt_path, final_video_with_subtitles, subtitle_filter, 'ffmpeg')
         # os.remove(final_video)
         os.rename(final_video_with_subtitles, final_video)
         time.sleep(1)
 
     return final_video
 
-def add_subtitles(video_path, srt_path, output_path, method='moviepy'):
+def add_subtitles(video_path, srt_path, output_path, subtitle_filter = None, method='moviepy'):
     """
     给视频文件添加字幕。
     
@@ -229,7 +229,7 @@ def add_subtitles(video_path, srt_path, output_path, method='moviepy'):
         command = [
             'ffmpeg',
             '-i', video_path,
-            '-vf', f"subtitles={srt_path}",
+            '-vf', f"subtitles={srt_path}" if subtitle_filter is None else subtitle_filter,
             output_path
         ]
 
