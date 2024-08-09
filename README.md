@@ -272,7 +272,7 @@ python webui.py
 
 ### 数字人对口型技术
 
-借鉴于`Linly-Talker`，专注于实现数字人的对口型技术。通过结合先进的计算机视觉和语音识别技术，`Linly-Talker` 能够使数字人角色的口型与配音精确匹配，从而实现高度自然的同步效果。这项技术不仅适用于动画角色，还可以应用于虚拟主播、教育视频中的讲解员等多种场景。`Linly-Talker` 通过精确的口型匹配和生动的面部表情，使得虚拟人物的表现更加生动逼真，为观众提供更加沉浸的体验。这种先进的数字人对口型技术大大提升了视频内容的专业性和观赏价值。https://[github.com](https://github.com/Kedreamix/Linly-Talker)/Kedreamix/Linly-Talker
+借鉴于`Linly-Talker`，专注于实现数字人的对口型技术。通过结合先进的计算机视觉和语音识别技术，`Linly-Talker` 能够使数字人角色的口型与配音精确匹配，从而实现高度自然的同步效果。这项技术不仅适用于动画角色，还可以应用于虚拟主播、教育视频中的讲解员等多种场景。`Linly-Talker` 通过精确的口型匹配和生动的面部表情，使得虚拟人物的表现更加生动逼真，为观众提供更加沉浸的体验。这种先进的数字人对口型技术大大提升了视频内容的专业性和观赏价值。可参考[https://github.com/Kedreamix/Linly-Talker](https://github.com/Kedreamix/Linly-Talker)
 
 ---
 
