@@ -175,10 +175,10 @@ linly_talker_interface = gr.Interface(
     ],
 )
 
-
+my_theme = gr.themes.Soft()
 # 应用程序界面
 app = gr.TabbedInterface(
-    theme='bethecloud/storj_theme',
+    theme=my_theme,
     interface_list=[
         full_auto_interface,
         download_interface,
@@ -199,5 +199,5 @@ app = gr.TabbedInterface(
 if __name__ == '__main__':
     app.launch(
         server_name="127.0.0.1", 
-        server_port=7890,
+        server_port=6006,
     )
