@@ -72,7 +72,8 @@
 - [x] 增加FunASR的AI语音识别算法，特别优化对中文的支持
 - [x] 利用Qwen大语言模型实现多语言翻译
 - [x] 开发Linly-Dubbing WebUI，提供一键生成最终视频的便捷功能，并支持多种参数配置
-- [ ] 提升声音克隆的自然度，考虑使用GPTSoVits进行微调
+- [ ] 加入UVR5进行人声/伴奏分离和混响移除，参考GPTSoVits
+- [ ] 提升声音克隆的自然度，考虑使用GPTSoVits进行微调，加入GPTSoVits
 - [ ] 实现并优化数字人对口型技术，提升配音与画面的契合度
 
 ---
@@ -127,7 +128,7 @@ cd Linly-Dubbing/
 
 # 安装ffmpeg工具
 # 使用conda安装ffmpeg
-conda install -c conda-forge ffmpeg
+conda install ffmpeg==7.0.2 -c conda-forge
 # 使用国内镜像安装ffmpeg
 conda install ffmpeg==7.0.2 -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
 
@@ -152,17 +153,22 @@ pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https
 
 ```bash
 # 对于CUDA 11.8
-conda install pytorch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 pytorch-cuda=11.8 -c pytorch -c nvidia
+conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 pytorch-cuda=11.8 -c pytorch -c nvidia
 
 # 对于CUDA 12.1
-conda install pytorch==2.3.0 torchvision==0.18.0 torchaudio==2.3.0 pytorch-cuda=12.1 -c pytorch -c nvidia
+conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
 然后，安装项目的其他依赖项：
 
 ```bash
 # 安装项目所需的Python包
+# pynini is required by WeTextProcessing, use conda to install it as it can be executed on all platform.
+conda install -y pynini==2.1.5 -c conda-forge
+# -c https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+
 pip install -r requirements.txt
+# 安装submodules 下的依赖
 pip install -r requirements_module.txt
 ```
 
@@ -175,7 +181,7 @@ export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirna
 
 ### 3. 配置环境变量
 
-在运行程序前，您需要配置必要的环境变量。请在项目根目录下的 `.env` 文件中添加以下内容：
+在运行程序前，您需要配置必要的环境变量。请在项目根目录下的 `.env` 文件中添加以下内容，首先将 `env.example`填入以下环境变量并 改名为 `.env` ：
 
 - `OPENAI_API_KEY`: 您的OpenAI API密钥，格式通常为 `sk-xxx`。
 - `MODEL_NAME`: 使用的模型名称，如 `gpt-4` 或 `gpt-3.5-turbo`。
@@ -195,8 +201,10 @@ export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirna
 在启动程序前，先通过以下命令自动下载所需的模型（包括Qwen，XTTSv2，CosyVoice模型，Qwen模型和faster-whisper-large-v3模型）：
 
 ```bash
-python scripts/modelscope_download.py
+bash scripts/download.sh
 ```
+
+![下载模型](docs/download.png)
 
 下载完成后，使用以下命令启动WebUI用户界面：
 
@@ -218,7 +226,17 @@ python webui.py
 
 ### 人声分离
 
+#### Demucs 
+
 **Demucs** 是由 Facebook 研究团队开发的一个先进的声音分离模型，旨在从混合音频中分离出不同的声音源。Demucs 的架构简单，但功能强大，它能够将乐器、声音和背景音分离开来，使用户能够更方便地进行后期处理和编辑。其简单易用的设计使得它成为许多声音处理应用的首选工具，广泛用于音乐制作、影视后期等领域。更多信息可以参见 [Demucs 的项目页面](https://github.com/facebookresearch/demucs)。
+
+#### UVR5
+
+UVR5 （Ultimate Vocal Remover）是目前最优秀的人声伴奏分离工具之一，是一款功能强大的伴奏制作/人声提取工具，其表现不仅优于RX9、RipX和SpectraLayers 9等同类工具，而且它提取出来的伴奏已经无限接近原版立体声，而且开源免费，开源地址：[https://github.com/Anjok07/ultimatevocalremovergui](https://github.com/Anjok07/ultimatevocalremovergui)。
+
+WebUI参考：[https://github.com/RVC-Boss/GPT-SoVITS/tree/main/tools/uvr5](https://github.com/RVC-Boss/GPT-SoVITS/tree/main/tools/uvr5)
+
+权重文件参考：[https://huggingface.co/lj1995/VoiceConversionWebUI/tree/main/uvr5_weights](https://huggingface.co/lj1995/VoiceConversionWebUI/tree/main/uvr5_weights)
 
 ### AI 智能语音识别
 
@@ -265,6 +283,17 @@ python webui.py
 1. **多语言支持**：处理多种语言的语音合成任务。
 2. **多风格语音合成**：通过指令控制语音的情感和语气。
 3. **流式推理支持**：计划未来支持实时流式推理。
+
+#### GPT-SoVITS
+
+感谢大家的开源贡献，AI语音合成还借鉴了当前开源的语音克隆模型 `GPT-SoVITS`，**GPT**是一种基于Transformer的自然语言处理模型，具有很强的文本生成能力。 **SoVITS**则是一种基于深度学习的语音转换技术，可以将一个人的语音转换成另一个人的语音。 通过将这两种技术结合起来，**GPT**-**SoVITS**可以生成高度逼真的语音，且语音内容与给定的文本内容一致。
+
+我认为效果是相当不错的，项目地址可参考https://github.com/RVC-Boss/GPT-SoVITS，主要功能如下：
+
+1. **零样本文本到语音（TTS）：** 输入 5 秒的声音样本，即刻体验文本到语音转换。
+2. **少样本 TTS：** 仅需 1 分钟的训练数据即可微调模型，提升声音相似度和真实感。
+3. **跨语言支持：** 支持与训练数据集不同语言的推理，目前支持英语、日语和中文。
+4. **WebUI 工具：** 集成工具包括声音伴奏分离、自动训练集分割、中文自动语音识别(ASR)和文本标注，协助初学者创建训练数据集和 GPT/SoVITS 模型。
 
 ### 视频处理
 
