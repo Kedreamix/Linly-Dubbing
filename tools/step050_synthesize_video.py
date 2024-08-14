@@ -125,7 +125,8 @@ def synthesize_video(folder, subtitles=True, speed_up=1.00, fps=30, resolution='
     audio_speed_filter = f"atempo={speed_up}"
     font_path = "./font/SimHei.ttf"
     subtitle_filter = f"subtitles={srt_path}:fontsdir={os.path.dirname(font_path)}:force_style='FontName=SimHei,FontSize={font_size},PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline={outline},WrapStyle=2'"
-    
+    # subtitle_filter = f"subtitles={srt_path}:force_style='FontName=Arial,FontSize={font_size},PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline={outline},WrapStyle=2'"
+
     filter_complex = f"[0:v]{video_speed_filter}[v];[1:a]{audio_speed_filter}[a]"
         
     # Add watermark if specified
@@ -144,7 +145,8 @@ def synthesize_video(folder, subtitles=True, speed_up=1.00, fps=30, resolution='
             '-c:v', 'libx264',
             '-c:a', 'aac',
             final_video,
-            '-y'
+            '-y',
+            '-threads', '2',
         ]
     else:
         ffmpeg_command = [
@@ -159,7 +161,8 @@ def synthesize_video(folder, subtitles=True, speed_up=1.00, fps=30, resolution='
             '-c:v', 'libx264',
             '-c:a', 'aac',
             final_video,
-            '-y'
+            '-y',
+            '-threads', '2',
         ]
     subprocess.run(ffmpeg_command)
     time.sleep(1)
@@ -177,7 +180,8 @@ def synthesize_video(folder, subtitles=True, speed_up=1.00, fps=30, resolution='
             '-c:v', 'copy',                       # Copy the original video codec
             '-c:a', 'aac',                    # Encode the audio as AAC
             final_video_with_bgm,
-            '-y'
+            '-y',
+            '-threads', '2'
         ]
         subprocess.run(ffmpeg_command_bgm)
         os.remove(final_video)
@@ -230,7 +234,9 @@ def add_subtitles(video_path, srt_path, output_path, subtitle_filter = None, met
             'ffmpeg',
             '-i', video_path,
             '-vf', f"subtitles={srt_path}" if subtitle_filter is None else subtitle_filter,
-            output_path
+            output_path,
+            '-y',
+            '-threads', '2',
         ]
 
         subprocess.run(command, check=True)

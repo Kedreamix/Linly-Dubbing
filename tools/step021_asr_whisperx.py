@@ -59,10 +59,15 @@ def load_diarize_model(device='auto'):
     if device == 'auto':
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     t_start = time.time()
-    diarize_model = whisperx.DiarizationPipeline(use_auth_token=os.getenv('HF_TOKEN'), device=device)
-    t_end = time.time()
-    logger.info(f'Loaded diarization model in {t_end - t_start:.2f}s')
-
+    try:
+        diarize_model = whisperx.DiarizationPipeline(use_auth_token=os.getenv('HF_TOKEN'), device=device)
+        t_end = time.time()
+        logger.info(f'Loaded diarization model in {t_end - t_start:.2f}s')
+    except Exception as e:
+        t_end = time.time()
+        logger.error(f"Failed to load diarization model in {t_end - t_start:.2f}s due to {str(e)}")
+        logger.info("You have not set the HF_TOKEN, so the pyannote/speaker-diarization-3.1 model could not be downloaded.")
+        logger.info("If you need to use the speaker diarization feature, please request access to the pyannote/speaker-diarization-3.1 model. Alternatively, you can choose not to enable this feature.")
 
 def merge_segments(transcript, ending='!"\').:;?]}~'):
     merged_transcription = []

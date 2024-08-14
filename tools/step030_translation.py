@@ -74,13 +74,18 @@ def translate(method, folder, target_language='简体中文'):
     
     info_path = os.path.join(folder, 'download.info.json')
     # 不一定要download.info.json
-    if not os.path.exists(info_path):
-        return False
-    
-    with open(info_path, 'r', encoding='utf-8') as f:
-        info = json.load(f)
-    info = get_necessary_info(info)
-    
+    if os.path.exists(info_path):
+        with open(info_path, 'r', encoding='utf-8') as f:
+            info = json.load(f)
+        info = get_necessary_info(info)
+    else:
+        info = {
+            'title': os.path.basename(folder),
+            'uploader': 'Unknown',
+            'description': 'Unknown',
+            'upload_date': 'Unknown',
+            'tags': []
+        }
     transcript_path = os.path.join(folder, 'transcript.json')
     with open(transcript_path, 'r', encoding='utf-8') as f:
         transcript = json.load(f)

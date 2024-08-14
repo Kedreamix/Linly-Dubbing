@@ -23,11 +23,12 @@ def preprocess_text(text):
     return text
     
     
-def adjust_audio_length(wav_path, desired_length, sample_rate = 24000, min_speed_factor = 0.6, max_speed_factor = 1.1):
+def adjust_audio_length(wav_path, desired_length, sample_rate = 24000, min_speed_factor = 0.5, max_speed_factor = 1.5):
     wav, sample_rate = librosa.load(wav_path, sr=sample_rate)
     current_length = len(wav)/sample_rate
     speed_factor = max(
         min(desired_length / current_length, max_speed_factor), min_speed_factor)
+    logger.info(f"Speed Factor {speed_factor}")
     desired_length = current_length * speed_factor
     target_path = wav_path.replace('.wav', f'_adjusted.wav')
     stretch_audio(wav_path, target_path, ratio=speed_factor, sample_rate=sample_rate)
@@ -41,7 +42,7 @@ tts_support_languages = {
     'GPTSoVits': [],
     'EdgeTTS': ['中文', 'English', 'Japanese', 'Korean', 'French', 'Polish', 'Spanish'],
     # zero_shot usage, <|zh|><|en|><|jp|><|yue|><|ko|> for Chinese/English/Japanese/Cantonese/Korean
-    'cozyvoice': ['中文', '粤语', 'English', 'Japanese', 'Korean', 'French'], 
+    'cosyvoice': ['中文', '粤语', 'English', 'Japanese', 'Korean', 'French'], 
 }
 
 def generate_wavs(method, folder, target_language='中文', voice = 'zh-CN-XiaoxiaoNeural'):

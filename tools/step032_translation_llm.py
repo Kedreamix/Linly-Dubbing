@@ -154,8 +154,6 @@ def summarize(info, transcript, target_language='简体中文'):
         except Exception as e:
             logger.warning(f'总结翻译失败\n{e}')
             time.sleep(1)
-        return None
-
 
 def translation_postprocess(result):
     result = re.sub(r'\（[^)]*\）', '', result)
@@ -219,7 +217,7 @@ def split_text_into_sentences(para):
     # 很多规则中会考虑分号;，但是这里我把它忽略不计，破折号、英文双引号等同样忽略，需要的再做些简单调整即可。
     return para.split("\n")
 
-def split_sentences(translation):
+def split_sentences(translation, use_char_based_end=True):
     output_data = []
     for item in translation:
         start = item['start']
@@ -227,11 +225,17 @@ def split_sentences(translation):
         speaker = item['speaker']
         translation_text = item['translation']
         sentences = split_text_into_sentences(translation_text)
-        duration_per_char = (item['end'] - item['start']
-                             ) / len(translation_text)
-        sentence_start = 0
+
+        if use_char_based_end:
+            duration_per_char = (item['end'] - item['start']) / len(translation_text)
+        else:
+            duration_per_char = 0
+
         for sentence in sentences:
-            sentence_end = start + duration_per_char * len(sentence)
+            if use_char_based_end:
+                sentence_end = start + duration_per_char * len(sentence)
+            else:
+                sentence_end = item['end']
 
             # Append the new item
             output_data.append({
@@ -243,8 +247,9 @@ def split_sentences(translation):
             })
 
             # Update the start for the next sentence
-            start = sentence_end
-            sentence_start += len(sentence)
+            if use_char_based_end:
+                start = sentence_end
+
     return output_data
     
 def _translate(summary, transcript, target_language='简体中文'):
@@ -268,7 +273,8 @@ def _translate(summary, transcript, target_language='简体中文'):
             {'role': 'user', 'content': 'Translate the following text: "Another Original Text"'},
             {'role': 'assistant', 'content': 'Translated text: "Another Translated Text"'},
         ]
-
+    if model is None:
+        init_llm_model(model_name)
 
     history = []
     for line in transcript:

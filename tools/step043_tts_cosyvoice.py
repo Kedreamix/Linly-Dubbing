@@ -19,7 +19,7 @@ def download_cosyvoice():
 def init_cosyvoice():
     load_model()
     
-def load_model(model_path="model/TTS/CosyVoice-300M", device='auto'):
+def load_model(model_path="models/TTS/CosyVoice-300M", device='auto'):
     global model
     if model is not None:
         return
@@ -43,7 +43,7 @@ language_map = {
     'Korean': 'ko'
 }
 
-def tts(text, output_path, speaker_wav, model_name="model/TTS/CosyVoice-300M", device='auto', target_langugae='中文'):
+def tts(text, output_path, speaker_wav, model_name="models/TTS/CosyVoice-300M", device='auto', target_language='中文'):
     global model
     
     if os.path.exists(output_path):
@@ -56,7 +56,7 @@ def tts(text, output_path, speaker_wav, model_name="model/TTS/CosyVoice-300M", d
     for retry in range(3):
         try:
             prompt_speech_16k = load_wav(speaker_wav, 16000)
-            output = model.inference_cross_lingual(f'<|{language_map[target_langugae]}|>{text}', prompt_speech_16k)
+            output = model.inference_cross_lingual(f'<|{language_map[target_language]}|>{text}', prompt_speech_16k)
             torchaudio.save(output_path, output['tts_speech'], 22050)
 
             logger.info(f'TTS {text}')
