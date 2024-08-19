@@ -205,10 +205,17 @@ export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirna
 
 ### 4. 运行程序
 
-在启动程序前，先通过以下命令自动下载所需的模型（包括Qwen，XTTSv2，CosyVoice模型，Qwen模型和faster-whisper-large-v3模型）：
+在启动程序前，先通过以下命令自动下载所需的模型（包括Qwen，XTTSv2，和faster-whisper-large-v3模型）：
 
 ```bash
+# Linux 终端运行
 bash scripts/download.sh
+
+# Windows
+python scripts/modelscope_download.py
+# 下载wav2vec2_fairseq_base_ls960_asr_ls960.pth文件放在models/ASR/whisper文件夹下
+wget -nc https://download.pytorch.org/torchaudio/models/wav2vec2_fairseq_base_ls960_asr_ls960.pth \
+    -O models/ASR/whisper/wav2vec2_fairseq_base_ls960_asr_ls960.pth
 ```
 
 ![下载模型](docs/download.png)
@@ -295,7 +302,7 @@ WebUI参考：[https://github.com/RVC-Boss/GPT-SoVITS/tree/main/tools/uvr5](http
 
 感谢大家的开源贡献，AI语音合成还借鉴了当前开源的语音克隆模型 `GPT-SoVITS`，**GPT**是一种基于Transformer的自然语言处理模型，具有很强的文本生成能力。 **SoVITS**则是一种基于深度学习的语音转换技术，可以将一个人的语音转换成另一个人的语音。 通过将这两种技术结合起来，**GPT**-**SoVITS**可以生成高度逼真的语音，且语音内容与给定的文本内容一致。
 
-我认为效果是相当不错的，项目地址可参考https://github.com/RVC-Boss/GPT-SoVITS，主要功能如下：
+我认为效果是相当不错的，项目地址可参考[https://github.com/RVC-Boss/GPT-SoVITS](https://github.com/RVC-Boss/GPT-SoVITS)，主要功能如下：
 
 1. **零样本文本到语音（TTS）：** 输入 5 秒的声音样本，即刻体验文本到语音转换。
 2. **少样本 TTS：** 仅需 1 分钟的训练数据即可微调模型，提升声音相似度和真实感。

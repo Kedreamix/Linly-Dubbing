@@ -25,46 +25,46 @@ def process_video(info, root_folder, resolution,
     local_time = time.localtime()
 
     for retry in range(max_retries):
-        # try:
-        if info.endswith('.mp4'):
-            folder = os.path.dirname(info)
-            # os.rename(info, os.path.join(folder, 'download.mp4'))
-        else:
-            folder = get_target_folder(info, root_folder)
-            if folder is None:
-                logger.warning(f'Failed to get target folder for video {info["title"]}')
-                return False
+        try:
+            if isinstance(info, str) and info.endswith('.mp4'):
+                folder = os.path.dirname(info)
+                # os.rename(info, os.path.join(folder, 'download.mp4'))
+            else:
+                folder = get_target_folder(info, root_folder)
+                if folder is None:
+                    logger.warning(f'Failed to get target folder for video {info["title"]}')
+                    return False
 
-            folder = download_single_video(info, root_folder, resolution)
-            if folder is None:
-                logger.warning(f'Failed to download video {info["title"]}')
-                return True
+                folder = download_single_video(info, root_folder, resolution)
+                if folder is None:
+                    logger.warning(f'Failed to download video {info["title"]}')
+                    return True
 
-        logger.info(f'Process video in {folder}')
-        separate_all_audio_under_folder(
-            folder, model_name=demucs_model, device=device, progress=True, shifts=shifts)
-        transcribe_all_audio_under_folder(
-            folder, asr_method=asr_method, whisper_model_name=whisper_model, device=device, 
-            batch_size=batch_size, diarization=diarization, 
-            min_speakers=whisper_min_speakers,
-            max_speakers=whisper_max_speakers)
-        
-        translate_all_transcript_under_folder(
-            folder, method = translation_method, target_language=translation_target_language
-        )
-        generate_all_wavs_under_folder(folder, method = tts_method, target_language=tts_target_language, voice=voice)
-        _, ouput_video = synthesize_all_video_under_folder(folder, subtitles=subtitles, speed_up=speed_up, fps=fps, resolution=target_resolution, 
-                                                           background_music=background_music, bgm_volume=bgm_volume, video_volume=video_volume)
-        return True, ouput_video
-        # except Exception as e:
-        #     logger.error(f'Error processing video {info["title"]}: {e}')
+            logger.info(f'Process video in {folder}')
+            separate_all_audio_under_folder(
+                folder, model_name=demucs_model, device=device, progress=True, shifts=shifts)
+            transcribe_all_audio_under_folder(
+                folder, asr_method=asr_method, whisper_model_name=whisper_model, device=device, 
+                batch_size=batch_size, diarization=diarization, 
+                min_speakers=whisper_min_speakers,
+                max_speakers=whisper_max_speakers)
+            
+            translate_all_transcript_under_folder(
+                folder, method = translation_method, target_language=translation_target_language
+            )
+            generate_all_wavs_under_folder(folder, method = tts_method, target_language=tts_target_language, voice=voice)
+            _, ouput_video = synthesize_all_video_under_folder(folder, subtitles=subtitles, speed_up=speed_up, fps=fps, resolution=target_resolution, 
+                                                                background_music=background_music, bgm_volume=bgm_volume, video_volume=video_volume)
+            return True, ouput_video
+        except Exception as e:
+            logger.error(f'Error processing video {info["title"]}: {e}')
     return False, None
 
 
 def do_everything(root_folder, url, num_videos=5, resolution='1080p',
                   demucs_model='htdemucs_ft', device='auto', shifts=5, 
                   asr_method='WhisperX', whisper_model='large', batch_size=32, diarization=False, whisper_min_speakers=None, whisper_max_speakers=None, 
-                  translation_method = 'Qwen',translation_target_language='简体中文', 
+                  translation_method = 'LLM',translation_target_language='简体中文', 
                   tts_method='xtts', tts_target_language='中文', voice='zh-CN-XiaoxiaoNeural',
                   subtitles=True, speed_up=1.00, fps=30, 
                   background_music=None, bgm_volume=0.5, video_volume=1.0, target_resolution='1080p', 
@@ -147,4 +147,9 @@ def do_everything(root_folder, url, num_videos=5, resolution='1080p',
 
 
 if __name__ == '__main__':
-    do_everything(root_folder = 'videos', url = 'https://www.bilibili.com/video/BV1kr421M7vz/')
+    do_everything(
+        root_folder = 'videos', 
+        url = 'https://www.bilibili.com/video/BV1kr421M7vz/',
+        # translation_method = 'LLM', 
+        translation_method = 'Google Translate', translation_target_language = '简体中文',
+        )
