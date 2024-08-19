@@ -29,7 +29,7 @@ full_auto_interface = gr.Interface(
         gr.Radio([None, 1, 2, 3, 4, 5, 6, 7, 8, 9], label='最小说话人数', value=None),
         gr.Radio([None, 1, 2, 3, 4, 5, 6, 7, 8, 9], label='最大说话人数', value=None),
 
-        gr.Dropdown(['OpenAI', 'Qwen', 'Google Translate'], label='翻译方式', value='Qwen'),
+        gr.Dropdown(['OpenAI', 'LLM', 'Google Translate', 'Bing Translate'], label='翻译方式', value='LLM'),
         gr.Dropdown(['简体中文', '繁体中文', 'English', 'Cantonese', 'Japanese', 'Korean'], label='目标语言', value='简体中文'),
 
         gr.Dropdown(['xtts', 'cosyvoice', 'EdgeTTS'], label='AI语音生成方法', value='xtts'),
@@ -113,7 +113,7 @@ translation_interface = gr.Interface(
     fn=translate_all_transcript_under_folder,
     inputs=[
         gr.Textbox(label='视频文件夹', value='videos'),
-        gr.Dropdown(['OpenAI', 'Qwen', 'Google Translate'], label='翻译方式', value='Qwen'),
+        gr.Dropdown(['OpenAI', 'LLM', 'Google Translate', 'Bing Translate'], label='翻译方式', value='LLM'),
         gr.Dropdown(['简体中文', '繁体中文', 'English', 'Cantonese', 'Japanese', 'Korean'], label='目标语言', value='简体中文'),
     ],
     outputs=[
