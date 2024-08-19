@@ -11,12 +11,12 @@ device = 'cuda'
 
 model = None
 tokenizer = None
+model_name = os.getenv('MODEL_NAME', 'qwen/Qwen1.5-4B-Chat')
+if 'Qwen' not in model_name:
+    model_name = 'qwen/Qwen1.5-4B-Chat'
 
 def init_llm_model(model_name):
     global model, tokenizer
-    model_name = os.getenv('MODEL_NAME', 'qwen/Qwen1.5-4B-Chat')
-    if 'Qwen' not in model_name:
-        model_name = 'qwen/Qwen1.5-4B-Chat'
     if 'Qwen' in model_name:
         from transformers import AutoModelForCausalLM, AutoTokenizer
         model_path = os.path.join('models/LLM', os.path.basename(model_name))
