@@ -5,6 +5,10 @@
 # torchvision
 # torchaudio
 
+numpy==1.26.3
+transformers==4.39.3
+translators
+
 gradio
 loguru
 yt-dlp
