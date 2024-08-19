@@ -19,6 +19,8 @@ align_metadata = None
 def init_whisperx():
     load_whisper_model()
     load_align_model()
+
+def init_diarize():
     load_diarize_model()
     
 def load_whisper_model(model_name: str = 'large', download_root = 'models/ASR/whisper', device='auto'):
@@ -83,9 +85,12 @@ def whisperx_transcribe_audio(wav_path, model_name: str = 'large', download_root
     
     if diarization:
         load_diarize_model(device)
-        diarize_segments = diarize_model(wav_path,min_speakers=min_speakers, max_speakers=max_speakers)
-        rec_result = whisperx.assign_word_speakers(diarize_segments, rec_result)
-
+        if diarize_model:
+            diarize_segments = diarize_model(wav_path,min_speakers=min_speakers, max_speakers=max_speakers)
+            rec_result = whisperx.assign_word_speakers(diarize_segments, rec_result)
+        else:
+            logger.warning("Diarization model is not loaded, skipping speaker diarization")
+        
     transcript = [{'start': segement['start'], 'end': segement['end'], 'text': segement['text'].strip(), 'speaker': segement.get('speaker', 'SPEAKER_00')} for segement in rec_result['segments']]
     return transcript
 

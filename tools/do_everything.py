@@ -3,7 +3,7 @@ import os
 import time
 from loguru import logger
 from .step000_video_downloader import get_info_list_from_url, download_single_video, get_target_folder
-from .step010_demucs_vr import separate_all_audio_under_folder, init_demucs
+from .step010_demucs_vr import separate_all_audio_under_folder, init_demucs, init_diarize
 from .step020_asr import transcribe_all_audio_under_folder
 from .step021_asr_whisperx import init_whisperx
 from .step022_asr_funasr import init_funasr
@@ -79,14 +79,15 @@ def do_everything(root_folder, url, num_videos=5, resolution='1080p',
     with ThreadPoolExecutor() as executor:
         # Submitting the tasks
         # video_info_future = executor.submit(get_info_list_from_url, urls, num_videos)
-        if diarization:
-            executor.submit(init_demucs)
+        executor.submit(init_demucs)
         if tts_method == 'xtts':
             executor.submit(init_TTS)
         elif tts_method == 'cosyvoice':
             executor.submit(init_cosyvoice)
         if asr_method == 'WhisperX':
             executor.submit(init_whisperx)
+            if diarization:
+                executor.submit(init_diarize)
         elif asr_method == 'FunASR':
             executor.submit(init_funasr)
         # Waiting for the get_info_list_from_url task to complete and storing its result
@@ -150,6 +151,6 @@ if __name__ == '__main__':
     do_everything(
         root_folder = 'videos', 
         url = 'https://www.bilibili.com/video/BV1kr421M7vz/',
-        # translation_method = 'LLM', 
-        translation_method = 'Google Translate', translation_target_language = '简体中文',
+        translation_method = 'LLM', 
+        # translation_method = 'Google Translate', translation_target_language = '简体中文',
         )
