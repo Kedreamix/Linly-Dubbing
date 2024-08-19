@@ -3,9 +3,9 @@ import os
 import time
 from loguru import logger
 from .step000_video_downloader import get_info_list_from_url, download_single_video, get_target_folder
-from .step010_demucs_vr import separate_all_audio_under_folder, init_demucs, init_diarize
+from .step010_demucs_vr import separate_all_audio_under_folder, init_demucs
 from .step020_asr import transcribe_all_audio_under_folder
-from .step021_asr_whisperx import init_whisperx
+from .step021_asr_whisperx import init_whisperx, init_diarize
 from .step022_asr_funasr import init_funasr
 from .step030_translation import translate_all_transcript_under_folder
 from .step040_tts import generate_all_wavs_under_folder
