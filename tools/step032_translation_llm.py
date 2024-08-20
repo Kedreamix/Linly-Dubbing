@@ -2,12 +2,12 @@
 import json
 import os
 import re
+import torch
 from dotenv import load_dotenv
 import time
 from loguru import logger
 
 load_dotenv()
-device = 'cuda'
 
 model = None
 tokenizer = None
@@ -30,7 +30,7 @@ def init_llm_model(model_name):
         tokenizer = AutoTokenizer.from_pretrained(pretrained_path)
         print('Finish Load model', pretrained_path)
 
-def llm_response(messages):
+def llm_response(messages, device='auto'):
     if model is None:
         init_llm_model(model_name)
     if 'Qwen' in model_name:
@@ -39,6 +39,8 @@ def llm_response(messages):
             tokenize=False,
             add_generation_prompt=True
         )
+        if device == 'auto':
+            device = 'cuda' if torch.cuda.is_available() else 'cpu'
         model_inputs = tokenizer([text], return_tensors="pt").to(device)
 
         generated_ids = model.generate(

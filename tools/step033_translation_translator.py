@@ -12,9 +12,10 @@ def translator_response(messages, to_language = 'zh-CN', translator_server = 'bi
     elif 'English' in to_language:
         to_language = 'en'
     translation = ''
-    while not translation:
+    for retry in range(3):
         try:
             translation = ts.translate_text(query_text=messages, translator=translator_server, from_language='auto', to_language=to_language)
+            break
         except Exception as e:
             logger.info(f'translate failed! {e}')
             print('tranlate failed!')
