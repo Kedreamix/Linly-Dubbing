@@ -9,6 +9,7 @@ from loguru import logger
 from .step031_translation_openai import openai_response
 from .step032_translation_llm import llm_response
 from .step033_translation_translator import translator_response
+from .step034_translation_ernie import ernie_response
 load_dotenv()
 
 def get_necessary_info(info: dict):
@@ -101,6 +102,7 @@ def split_sentences(translation, use_char_based_end=True):
         else:
             duration_per_char = 0
 
+        # logger.info(f'Char duration: {duration_per_char}')
         for sentence in sentences:
             if use_char_based_end:
                 sentence_end = start + duration_per_char * len(sentence)
@@ -156,6 +158,12 @@ def summarize(info, transcript, target_language='简体中文', method = 'LLM'):
                 response = llm_response(messages)
             elif method == 'OpenAI':
                 response = openai_response(messages)
+            elif method == 'ernie':
+                system_content = messages[0]['content']
+                user_messages = messages[1:]
+                response = ernie_response(user_messages, system=system_content)
+            else:
+                raise Exception('Invalid method')
             summary = response.replace('\n', '')
             if '视频标题' in summary:
                 raise Exception("包含“视频标题”")
@@ -250,6 +258,10 @@ def _translate(summary, transcript, target_language='简体中文', method='LLM'
                         response = llm_response(messages)
                     elif method == 'OpenAI':
                         response = openai_response(messages)
+                    elif method == 'ernie':
+                        system_content = messages[0]['content']
+                        user_messages = messages[1:]
+                        response = ernie_response(user_messages, system=system_content)
                     else:
                         raise Exception('Invalid method')
                     translation = response.replace('\n', '')
@@ -327,4 +339,5 @@ def translate_all_transcript_under_folder(folder, method, target_language):
 
 if __name__ == '__main__':
     # translate_all_transcript_under_folder(r'videos', 'LLM' , '简体中文')
-    translate_all_transcript_under_folder(r'videos', 'OpenAI' , '简体中文')
+    # translate_all_transcript_under_folder(r'videos', 'OpenAI' , '简体中文')
+    translate_all_transcript_under_folder(r'videos', 'ernie' , '简体中文')

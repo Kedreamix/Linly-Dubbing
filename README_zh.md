@@ -107,7 +107,9 @@
 
 请按照以下步骤进行`Linly-Dubbing`的安装与配置。
 
-此外，我还提供了一个Colab脚本，您可以点击 [Linly-Dubbing Colab](https://colab.research.google.com/github/Kedreamix/Linly-Dubbing/blob/main/colab_webui.ipynb) 进行在线体验。
+> [!NOTE]
+>
+> 此外，我还提供了一个Colab脚本，您可以点击 [Linly-Dubbing Colab](https://colab.research.google.com/github/Kedreamix/Linly-Dubbing/blob/main/colab_webui.ipynb) 进行在线体验。
 
 ### 1. 克隆代码仓库
 
@@ -171,6 +173,10 @@ conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 pytorch-cuda=
 conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
+> [!NOTE]
+>
+> 安装过程可能耗时很长。
+
 然后，安装项目的其他依赖项：
 
 ```bash
@@ -184,12 +190,14 @@ pip install -r requirements.txt
 pip install -r requirements_module.txt
 ```
 
-如在安装过程中遇到错误提示“Could not load library libcudnn_ops_infer.so.8”，请按以下步骤修复：
-
-```bash
-# 设置LD_LIBRARY_PATH以包含正确的cuDNN库路径
-export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirname(os.path.dirname(torch.__file__)) +"/nvidia/cudnn/lib")'`:$LD_LIBRARY_PATH
-```
+> [!TIP]
+>
+> 如在安装过程中遇到错误提示“Could not load library libcudnn_ops_infer.so.8”，请按以下步骤修复：
+>
+> ```bash
+> # 设置LD_LIBRARY_PATH以包含正确的cuDNN库路径
+> export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirname(os.path.dirname(torch.__file__)) +"/nvidia/cudnn/lib")'`:$LD_LIBRARY_PATH
+> ```
 
 ### 3. 配置环境变量
 
@@ -201,12 +209,19 @@ export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirna
 - `HF_TOKEN`: Hugging Face的API Token，用于访问和下载模型。
 - `HF_ENDPOINT`: 当遇到模型下载问题时，可指定自定义的Hugging Face端点。
 - `APPID` 和 `ACCESS_TOKEN`: 用于火山引擎TTS的凭据。
+- `BAIDU_API_KEY`和`BAIDU_SECRET_KEY`: 用于百度文心一言的API
 
-**通常，您只需配置 `MODEL_NAME` 和 `HF_TOKEN` 即可。**
+> [!NOTE]
+>
+> 通常，您只需配置 `MODEL_NAME` 和 `HF_TOKEN` 即可。
+>
+> 默认情况下，`MODEL_NAME` 设为 `Qwen/Qwen1.5-4B-Chat`，因此无需额外配置 `OPENAI_API_KEY`。
 
-默认情况下，`MODEL_NAME` 设为 `Qwen/Qwen1.5-4B-Chat`，因此无需额外配置 `OPENAI_API_KEY`。
-
-您可以在 [Hugging Face](https://huggingface.co/settings/tokens) 获取 `HF_TOKEN`。若需使用**说话人分离功能**，务必在[pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)申请访问权限。否则，可以选择不启用该功能。
+> ![TIP]
+>
+> 由于正常情况下大模型效果有限，所以建议可以使用规模较大的模型或者说使用较好的API，个人推荐可以选择OpenAI的api，如果考虑到收费问题，可以尝试百度的文心一言的API，免费申请API，填入到环境变量即可，[https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application/v1](https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application/v1)
+>
+> 可以在 [Hugging Face](https://huggingface.co/settings/tokens) 获取 `HF_TOKEN`。若需使用**说话人分离功能**，务必在[pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)申请访问权限。否则，可以选择不启用该功能。
 
 ### 4. 运行程序
 
@@ -325,6 +340,10 @@ WebUI参考：[https://github.com/RVC-Boss/GPT-SoVITS/tree/main/tools/uvr5](http
 ---
 
 ## 许可协议
+
+> [!Caution]
+>
+> 在使用本工具时，请遵守相关法律，包括版权法、数据保护法和隐私法。未经原作者和/或版权所有者许可，请勿使用本工具。
 
 `Linly-Dubbing` 遵循 Apache License 2.0。在使用本工具时，请遵守相关法律，包括版权法、数据保护法和隐私法。未经原作者和/或版权所有者许可，请勿使用本工具。
 

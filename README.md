@@ -107,7 +107,9 @@ This guide applies to the following test environments:
 
 Follow the steps below to install and configure `Linly-Dubbing`. 
 
-A Colab script is also available for an online experience: [Linly-Dubbing Colab](https://colab.research.google.com/github/Kedreamix/Linly-Dubbing/blob/main/colab_webui.ipynb).
+> [!NOTE]
+>
+> A Colab script is also available for an online experience: [Linly-Dubbing Colab](https://colab.research.google.com/github/Kedreamix/Linly-Dubbing/blob/main/colab_webui.ipynb).
 
 ### 1. Clone the Repository
 
@@ -171,6 +173,10 @@ conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 pytorch-cuda=
 conda install pytorch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
+> ![NOTE]
+>
+> The installation process is very slow.
+
 Next, install the remaining project dependencies:
 
 ```bash
@@ -184,12 +190,15 @@ pip install -r requirements.txt
 pip install -r requirements_module.txt
 ```
 
-If you encounter an error during installation that says "Could not load library libcudnn_ops_infer.so.8," follow these steps to fix it:
-
-```bash
-# Set LD_LIBRARY_PATH to include the correct cuDNN library path
-export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirname(os.path.dirname(torch.__file__)) +"/nvidia/cudnn/lib")'`:$LD_LIBRARY_PATH
-```
+> [!TIP]
+>
+> If you encounter an error during installation that says "Could not load library libcudnn_ops_infer.so.8," follow these steps to fix it:
+>
+> ```bash
+> # Set LD_LIBRARY_PATH to include the correct cuDNN library path
+> export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirname(os.path.dirname(torch.__file__)) +"/nvidia/cudnn/lib")'`:$LD_LIBRARY_PATH
+> ```
+>
 
 ### 3. Configure Environment Variables
 
@@ -201,12 +210,19 @@ Before running the program, you need to configure the necessary environment vari
 - `HF_TOKEN`: Your Hugging Face API token, used to access and download models.
 - `HF_ENDPOINT`: A custom Hugging Face endpoint, which can be specified if you encounter issues with model downloading.
 - `APPID` and `ACCESS_TOKEN`: Credentials for using the Bytedance TTS engine.
+- `BAIDU_API_KEY` and `BAIDU_SECRET_KEY`: Used for Baidu's Ernie Bot API.
 
-**In most cases, you only need to configure `MODEL_NAME` and `HF_TOKEN`.**
+> [!NOTE]
+>
+> In most cases, you only need to configure `MODEL_NAME` and `HF_TOKEN`.
+>
+> By default, `MODEL_NAME` is set to `Qwen/Qwen1.5-4B-Chat`, so you do not need to configure the `OPENAI_API_KEY`.
 
-By default, `MODEL_NAME` is set to `Qwen/Qwen1.5-4B-Chat`, so you do not need to configure the `OPENAI_API_KEY`.
-
-You can obtain your `HF_TOKEN` from [Hugging Face](https://huggingface.co/settings/tokens). If you wish to use the **speaker separation feature**, make sure to request access to [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1). Otherwise, you can opt not to enable this feature.
+> [!TIP]
+>
+> Since the performance of large models can be limited under normal circumstances, it is recommended to use larger models or better APIs. I personally recommend choosing OpenAI's API. If cost is a concern, you can try Baidu's Ernie Bot API, which offers free API access. Simply apply for the API and add it to your environment variables: https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application/v1.
+>
+> You can obtain your `HF_TOKEN` from [Hugging Face](https://huggingface.co/settings/tokens). If you wish to use the **speaker separation feature**, make sure to request access to [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1). Otherwise, you can opt not to enable this feature.
 
 ### 4. Run the Application
 
@@ -326,6 +342,10 @@ Inspired by `Linly-Talker`, this project focuses on digital human lip-sync techn
 ---
 
 ## License
+
+> [!Caution]
+>
+> When using this tool, please comply with relevant laws, including copyright, data protection, and privacy laws. Do not use this tool without permission from the original author and/or rights holder.
 
 `Linly-Dubbing` follows the Apache License 2.0. When using this tool, please comply with relevant laws, including copyright, data protection, and privacy laws. Do not use this tool without permission from the original author and/or rights holder.
 
