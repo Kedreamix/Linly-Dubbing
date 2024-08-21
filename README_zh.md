@@ -214,7 +214,7 @@ export LD_LIBRARY_PATH=`python3 -c 'import os; import torch; print(os.path.dirna
 
 ```bash
 # Linux 终端运行
-bash scripts/download.sh
+bash scripts/download_models.sh
 
 # Windows
 python scripts/modelscope_download.py

@@ -29,9 +29,9 @@
     - [2. Install Dependencies](#2-install-dependencies)
     - [3. Configure Environment Variables](#3-configure-environment-variables)
     - [4. Run the Application](#4-run-the-application)
-  - [Detailed-Features and Technical Details](#detailed-features-and-technical-details)
+  - [Detailed Features and Technical Details](#detailed-features-and-technical-details)
     - [Automatic Video Download](#automatic-video-download)
-    - [Voice Separationd](#voice-separation)
+    - [Vocal Separation](#vocal-separation)
       - [Demucs](#demucs)
       - [UVR5](#uvr5)
     - [AI Speech Recognition](#ai-speech-recognition)
@@ -41,7 +41,7 @@
       - [OpenAI API](#openai-api)
       - [Qwen](#qwen)
       - [Google Translate](#google-translate)
-    - [AI Speech Synthesis](#ai-speech-synthesis)
+    - [AI-Powered Speech Synthesis](#ai-powered-speech-synthesis)
       - [Edge TTS](#edge-tts)
       - [XTTS](#xtts)
       - [CosyVoice](#cosyvoice)
@@ -214,7 +214,7 @@ Before launching the application, run the following commands to automatically do
 
 ```bash
 # For Linux
-bash scripts/download.sh
+bash scripts/download_models.sh
 
 # For Windows
 python scripts/modelscope_download.py
@@ -347,4 +347,4 @@ In developing this project, I referenced and drew inspiration from several outst
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Kedreamix/Linly-Dubbing&type=Date)
+<img src="https://api.star-history.com/svg?repos=Kedreamix/Linly-Dubbing&type=Date" alt="Star History Chart" style="zoom:200%;" />
