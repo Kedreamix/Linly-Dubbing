@@ -23,14 +23,22 @@ def preprocess_text(text):
     return text
     
     
-def adjust_audio_length(wav_path, desired_length, sample_rate = 24000, min_speed_factor = 0.5, max_speed_factor = 1.5):
-    wav, sample_rate = librosa.load(wav_path, sr=sample_rate)
+def adjust_audio_length(wav_path, desired_length, sample_rate = 24000, min_speed_factor = 0.6, max_speed_factor = 1.1):
+    try:
+        wav, sample_rate = librosa.load(wav_path, sr=sample_rate)
+    except Exception as e:
+        if wav_path.endswith('.wav'):
+            wav_path = wav_path.replace('.wav', '.mp3')
+        wav, sample_rate = librosa.load(wav_path, sr=sample_rate)
     current_length = len(wav)/sample_rate
     speed_factor = max(
         min(desired_length / current_length, max_speed_factor), min_speed_factor)
     logger.info(f"Speed Factor {speed_factor}")
     desired_length = current_length * speed_factor
-    target_path = wav_path.replace('.wav', f'_adjusted.wav')
+    if wav_path.endswith('.wav'):
+        target_path = wav_path.replace('.wav', f'_adjusted.wav')
+    elif wav_path.endswith('.mp3'):
+        target_path = wav_path.replace('.mp3', f'_adjusted.wav')
     stretch_audio(wav_path, target_path, ratio=speed_factor, sample_rate=sample_rate)
     wav, sample_rate = librosa.load(target_path, sr=sample_rate)
     return wav[:int(desired_length*sample_rate)], desired_length

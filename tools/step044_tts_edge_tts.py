@@ -24,10 +24,9 @@ def tts(text, output_path, target_language='中文', voice = 'zh-CN-XiaoxiaoNeur
     if os.path.exists(output_path):
         logger.info(f'TTS {text} 已存在')
         return
-    
     for retry in range(3):
         try:
-            os.system(f'edge-tts --text "{text}" --write-media "{output_path}" --voice {voice}')
+            os.system(f'edge-tts --text "{text}" --write-media "{output_path.replace(".wav", ".mp3")}" --voice {voice}')
             logger.info(f'TTS {text}')
             break
         except Exception as e:

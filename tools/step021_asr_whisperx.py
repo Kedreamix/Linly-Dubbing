@@ -35,7 +35,10 @@ def load_whisper_model(model_name: str = 'large', download_root = 'models/ASR/wh
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     logger.info(f'Loading WhisperX model: {model_name}')
     t_start = time.time()
-    whisper_model = whisperx.load_model(model_name, download_root=download_root, device=device)
+    if device=='cpu':
+        whisper_model = whisperx.load_model(model_name, download_root=download_root, device=device, compute_type='int8')
+    else:
+        whisper_model = whisperx.load_model(model_name, download_root=download_root, device=device)
     t_end = time.time()
     logger.info(f'Loaded WhisperX model: {model_name} in {t_end - t_start:.2f}s')
 

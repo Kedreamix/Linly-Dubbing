@@ -87,8 +87,7 @@ def valid_translation(text, translation):
             return False, f"Don't include `{word}` in the translation. Only translate the following sentence and give me the result."
     
     return True, translation_postprocess(translation)
-
-def split_sentences(translation):
+def split_sentences(translation, use_char_based_end=True):
     output_data = []
     for item in translation:
         start = item['start']
@@ -96,11 +95,17 @@ def split_sentences(translation):
         speaker = item['speaker']
         translation_text = item['translation']
         sentences = split_text_into_sentences(translation_text)
-        duration_per_char = (item['end'] - item['start']
-                             ) / len(translation_text)
-        sentence_start = 0
+
+        if use_char_based_end:
+            duration_per_char = (item['end'] - item['start']) / len(translation_text)
+        else:
+            duration_per_char = 0
+
         for sentence in sentences:
-            sentence_end = start + duration_per_char * len(sentence)
+            if use_char_based_end:
+                sentence_end = start + duration_per_char * len(sentence)
+            else:
+                sentence_end = item['end']
 
             # Append the new item
             output_data.append({
@@ -112,8 +117,9 @@ def split_sentences(translation):
             })
 
             # Update the start for the next sentence
-            start = sentence_end
-            sentence_start += len(sentence)
+            if use_char_based_end:
+                start = sentence_end
+
     return output_data
 
 def summarize(info, transcript, target_language='简体中文', method = 'LLM'):
