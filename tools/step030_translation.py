@@ -158,7 +158,7 @@ def summarize(info, transcript, target_language='简体中文', method = 'LLM'):
                 response = llm_response(messages)
             elif method == 'OpenAI':
                 response = openai_response(messages)
-            elif method == 'ernie':
+            elif method == 'Ernie':
                 system_content = messages[0]['content']
                 user_messages = messages[1:]
                 response = ernie_response(user_messages, system=system_content)
@@ -258,7 +258,7 @@ def _translate(summary, transcript, target_language='简体中文', method='LLM'
                         response = llm_response(messages)
                     elif method == 'OpenAI':
                         response = openai_response(messages)
-                    elif method == 'ernie':
+                    elif method == 'Ernie':
                         system_content = messages[0]['content']
                         user_messages = messages[1:]
                         response = ernie_response(user_messages, system=system_content)
