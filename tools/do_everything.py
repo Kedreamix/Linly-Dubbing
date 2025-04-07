@@ -412,7 +412,7 @@ def do_everything(root_folder, url, num_videos=5, resolution='1080p',
 if __name__ == '__main__':
     do_everything(
         root_folder='videos',
-        url='https://www.bilibili.com/video/BV1kr421M7vz/',
+        url='https://www.youtube.com/watch?v=D27LswUNUxc',
         translation_method='LLM',
         # translation_method = 'Google Translate', translation_target_language = '简体中文',
     )

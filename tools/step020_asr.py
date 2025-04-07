@@ -90,7 +90,7 @@ def transcribe_all_audio_under_folder(folder, asr_method, whisper_model_name: st
     transcribe_json = None
     for root, dirs, files in os.walk(folder):
         if 'audio_vocals.wav' in files and 'transcript.json' not in files:
-            transcribe_json = transcribe_audio(asr_method, root, whisper_model_name, 'models/ASR/whisper', device, batch_size, diarization, min_speakers, max_speakers)
+            transcribe_json = transcribe_audio(asr_method, root, whisper_model_name, 'models/ASR/whisper/faster-whisper-large-v3', device, batch_size, diarization, min_speakers, max_speakers)
         elif 'transcript.json' in files:
             transcribe_json = json.load(open(os.path.join(root, 'transcript.json'), 'r', encoding='utf-8'))
 
