@@ -12,6 +12,7 @@ from tools.step033_translation_translator import translator_response
 from tools.step034_translation_ernie import ernie_response
 from tools.step035_translation_qwen import qwen_response
 from tools.step036_translation_ollama import ollama_response
+from tools.step037_translation_camb import camb_translate
 
 load_dotenv()
 import traceback
@@ -240,7 +241,23 @@ def summarize(info, transcript, target_language='简体中文', method = 'LLM'):
             logger.warning(f'总结翻译失败\n{e}')
             time.sleep(1)
 
+def _detect_source_language(transcript):
+    """Detect the source language from transcript text (simple heuristic)."""
+    sample = ' '.join(line['text'] for line in transcript[:5])
+    # Check for CJK characters
+    cjk_count = sum(1 for c in sample if '\u4e00' <= c <= '\u9fff')
+    if cjk_count > len(sample) * 0.3:
+        return '中文'
+    return 'English'
+
+
 def _translate(summary, transcript, target_language='简体中文', method='LLM'):
+
+    # CambAI batch translation - more efficient than one-by-one
+    if method == 'CambAI':
+        source_language = _detect_source_language(transcript)
+        texts = [line['text'] for line in transcript]
+        return camb_translate(texts, source_language, target_language)
 
     info = f'This is a video called "{summary["title"]}". {summary["summary"]}.'
     full_translation = []
@@ -336,15 +353,25 @@ def translate(method, folder, target_language='简体中文'):
         transcript = json.load(f)
     
     summary_path = os.path.join(folder, 'summary.json')
-    if os.path.exists(summary_path):
+
+    # CambAI translates directly via API — no summarization needed
+    if method == 'CambAI':
+        summary = {
+            'title': info.get('title', os.path.basename(folder)),
+            'author': info.get('uploader', 'Unknown'),
+            'summary': '',
+            'language': target_language,
+        }
+    elif os.path.exists(summary_path):
         summary = json.load(open(summary_path, 'r', encoding='utf-8'))
     else:
         summary = summarize(info, transcript, target_language, method)
         if summary is None:
             logger.error(f'Failed to summarize {folder}')
             return False
-        with open(summary_path, 'w', encoding='utf-8') as f:
-            json.dump(summary, f, indent=2, ensure_ascii=False)
+
+    with open(summary_path, 'w', encoding='utf-8') as f:
+        json.dump(summary, f, indent=2, ensure_ascii=False)
 
     translation_path = os.path.join(folder, 'translation.json')
     translation = _translate(summary, transcript, target_language, method)

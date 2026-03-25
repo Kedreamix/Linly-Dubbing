@@ -22,17 +22,17 @@ full_auto_interface = gr.Interface(
         gr.Radio(['auto', 'cuda', 'cpu'], label='计算设备', value='auto'),
         gr.Slider(minimum=0, maximum=10, step=1, label='移位次数 Number of shifts', value=5),
 
-        gr.Dropdown(['WhisperX', 'FunASR'], label='ASR模型选择', value='WhisperX'),
+        gr.Dropdown(['WhisperX', 'FunASR', 'CambAI'], label='ASR模型选择', value='WhisperX'),
         gr.Radio(['large', 'medium', 'small', 'base', 'tiny'], label='WhisperX模型大小', value='large'),
         gr.Slider(minimum=1, maximum=128, step=1, label='批处理大小 Batch Size', value=32),
         gr.Checkbox(label='分离多个说话人', value=True),
         gr.Radio([None, 1, 2, 3, 4, 5, 6, 7, 8, 9], label='最小说话人数', value=None),
         gr.Radio([None, 1, 2, 3, 4, 5, 6, 7, 8, 9], label='最大说话人数', value=None),
 
-        gr.Dropdown(['OpenAI', 'LLM', 'Google Translate', 'Bing Translate', 'Ernie'], label='翻译方式', value='LLM'),
+        gr.Dropdown(['OpenAI', 'LLM', 'Google Translate', 'Bing Translate', 'Ernie', 'CambAI'], label='翻译方式', value='LLM'),
         gr.Dropdown(['简体中文', '繁体中文', 'English', 'Cantonese', 'Japanese', 'Korean'], label='目标语言', value='简体中文'),
 
-        gr.Dropdown(['xtts', 'cosyvoice', 'EdgeTTS'], label='AI语音生成方法', value='xtts'),
+        gr.Dropdown(['xtts', 'cosyvoice', 'EdgeTTS', 'CambAI', 'CambAI Dub'], label='AI语音生成方法', value='xtts'),
         gr.Dropdown(['中文', 'English', '粤语', 'Japanese', 'Korean', 'Spanish', 'French'], label='目标语言', value='中文'),
         gr.Dropdown(SUPPORT_VOICE, value='zh-CN-XiaoxiaoNeural', label='EdgeTTS声音选择'),
 
@@ -93,7 +93,7 @@ asr_inference = gr.Interface(
     fn=transcribe_all_audio_under_folder,
     inputs=[
         gr.Textbox(label='视频文件夹', value='videos'),
-        gr.Dropdown(['WhisperX', 'FunASR'], label='ASR模型选择', value='WhisperX'),
+        gr.Dropdown(['WhisperX', 'FunASR', 'CambAI'], label='ASR模型选择', value='WhisperX'),
         gr.Radio(['large', 'medium', 'small', 'base', 'tiny'], label='WhisperX模型大小', value='large'),
         gr.Radio(['auto', 'cuda', 'cpu'], label='计算设备', value='auto'),
         gr.Slider(minimum=1, maximum=128, step=1, label='批处理大小 Batch Size', value=32),
@@ -102,7 +102,7 @@ asr_inference = gr.Interface(
         gr.Radio([None, 1, 2, 3, 4, 5, 6, 7, 8, 9], label='最大说话人数', value=None),
     ],
     outputs=[
-        gr.Text(label='语音识别状态'), 
+        gr.Text(label='语音识别状态'),
         gr.Json(label='识别结果详情')
     ],
     allow_flagging='never',
@@ -113,11 +113,11 @@ translation_interface = gr.Interface(
     fn=translate_all_transcript_under_folder,
     inputs=[
         gr.Textbox(label='视频文件夹', value='videos'),
-        gr.Dropdown(['OpenAI', 'LLM', 'Google Translate', 'Bing Translate', 'Ernie'], label='翻译方式', value='LLM'),
+        gr.Dropdown(['OpenAI', 'LLM', 'Google Translate', 'Bing Translate', 'Ernie', 'CambAI'], label='翻译方式', value='LLM'),
         gr.Dropdown(['简体中文', '繁体中文', 'English', 'Cantonese', 'Japanese', 'Korean'], label='目标语言', value='简体中文'),
     ],
     outputs=[
-        gr.Text(label='翻译状态'), 
+        gr.Text(label='翻译状态'),
         gr.Json(label='总结结果'), 
         gr.Json(label='翻译结果')
     ],
@@ -129,13 +129,13 @@ tts_interface = gr.Interface(
     fn=generate_all_wavs_under_folder,
     inputs=[
         gr.Textbox(label='视频文件夹', value='videos'),
-        gr.Dropdown(['xtts', 'cosyvoice', 'EdgeTTS'], label='AI语音生成方法', value='xtts'),
+        gr.Dropdown(['xtts', 'cosyvoice', 'EdgeTTS', 'CambAI'], label='AI语音生成方法', value='xtts'),
         gr.Dropdown(['中文', 'English', '粤语', 'Japanese', 'Korean', 'Spanish', 'French'], label='目标语言', value='中文'),
         gr.Dropdown(SUPPORT_VOICE, value='zh-CN-XiaoxiaoNeural', label='EdgeTTS声音选择'),
     ],
     outputs=[
-        gr.Text(label='合成状态'), 
-        gr.Audio(label='合成语音'), 
+        gr.Text(label='合成状态'),
+        gr.Audio(label='合成语音'),
         gr.Audio(label='原始音频')
     ],
     allow_flagging='never',

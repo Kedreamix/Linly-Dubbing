@@ -8,9 +8,16 @@ import numpy as np
 
 from .utils import save_wav, save_wav_norm
 # from .step041_tts_bytedance import tts as bytedance_tts
-from .step042_tts_xtts import tts as xtts_tts
-from .step043_tts_cosyvoice import tts as cosyvoice_tts
+try:
+    from .step042_tts_xtts import tts as xtts_tts
+except ImportError:
+    xtts_tts = None
+try:
+    from .step043_tts_cosyvoice import tts as cosyvoice_tts
+except ImportError:
+    cosyvoice_tts = None
 from .step044_tts_edge_tts import tts as edge_tts
+from .step045_tts_camb import tts as camb_tts
 from .cn_tx import TextNorm
 from audiostretchy.stretch import stretch_audio
 normalizer = TextNorm()
@@ -50,11 +57,12 @@ tts_support_languages = {
     'GPTSoVits': [],
     'EdgeTTS': ['中文', 'English', 'Japanese', 'Korean', 'French', 'Polish', 'Spanish'],
     # zero_shot usage, <|zh|><|en|><|jp|><|yue|><|ko|> for Chinese/English/Japanese/Cantonese/Korean
-    'cosyvoice': ['中文', '粤语', 'English', 'Japanese', 'Korean', 'French'], 
+    'cosyvoice': ['中文', '粤语', 'English', 'Japanese', 'Korean', 'French'],
+    'CambAI': ['中文', '粤语', 'English', 'Japanese', 'Korean', 'French', 'Spanish'],
 }
 
 def generate_wavs(method, folder, target_language='中文', voice = 'zh-CN-XiaoxiaoNeural'):
-    assert method in ['xtts', 'bytedance', 'cosyvoice', 'EdgeTTS']
+    assert method in ['xtts', 'bytedance', 'cosyvoice', 'EdgeTTS', 'CambAI']
     transcript_path = os.path.join(folder, 'translation.json')
     output_folder = os.path.join(folder, 'wavs')
     if not os.path.exists(output_folder):
@@ -89,6 +97,8 @@ def generate_wavs(method, folder, target_language='中文', voice = 'zh-CN-Xiaox
             cosyvoice_tts(text, output_path, speaker_wav, target_language = target_language)
         elif method == 'EdgeTTS':
             edge_tts(text, output_path, target_language = target_language, voice = voice)
+        elif method == 'CambAI':
+            camb_tts(text, output_path, speaker_wav, target_language = target_language)
         start = line['start']
         end = line['end']
         length = end-start

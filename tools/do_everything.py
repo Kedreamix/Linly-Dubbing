@@ -8,13 +8,26 @@ from loguru import logger
 from .step000_video_downloader import get_info_list_from_url, download_single_video, get_target_folder
 from .step010_demucs_vr import separate_all_audio_under_folder, init_demucs, release_model
 from .step020_asr import transcribe_all_audio_under_folder
-from .step021_asr_whisperx import init_whisperx, init_diarize
-from .step022_asr_funasr import init_funasr
+try:
+    from .step021_asr_whisperx import init_whisperx, init_diarize
+except ImportError:
+    init_whisperx = init_diarize = None
+try:
+    from .step022_asr_funasr import init_funasr
+except ImportError:
+    init_funasr = None
 from .step030_translation import translate_all_transcript_under_folder
 from .step040_tts import generate_all_wavs_under_folder
-from .step042_tts_xtts import init_TTS
-from .step043_tts_cosyvoice import init_cosyvoice
+try:
+    from .step042_tts_xtts import init_TTS
+except ImportError:
+    init_TTS = None
+try:
+    from .step043_tts_cosyvoice import init_cosyvoice
+except ImportError:
+    init_cosyvoice = None
 from .step050_synthesize_video import synthesize_all_video_under_folder
+from .step_camb_dub import dub_video
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # 跟踪模型初始化状态
@@ -59,26 +72,26 @@ def initialize_models(tts_method, asr_method, diarization):
                 logger.info("Demucs模型已初始化，跳过")
 
             # TTS模型初始化
-            if tts_method == 'xtts' and not models_initialized['xtts']:
+            if tts_method == 'xtts' and not models_initialized['xtts'] and init_TTS:
                 executor.submit(init_TTS)
                 models_initialized['xtts'] = True
                 logger.info("XTTS模型初始化完成")
-            elif tts_method == 'cosyvoice' and not models_initialized['cosyvoice']:
+            elif tts_method == 'cosyvoice' and not models_initialized['cosyvoice'] and init_cosyvoice:
                 executor.submit(init_cosyvoice)
                 models_initialized['cosyvoice'] = True
                 logger.info("CosyVoice模型初始化完成")
 
             # ASR模型初始化
-            if asr_method == 'WhisperX':
+            if asr_method == 'WhisperX' and init_whisperx:
                 if not models_initialized['whisperx']:
                     executor.submit(init_whisperx)
                     models_initialized['whisperx'] = True
                     logger.info("WhisperX模型初始化完成")
-                if diarization and not models_initialized['diarize']:
+                if diarization and not models_initialized['diarize'] and init_diarize:
                     executor.submit(init_diarize)
                     models_initialized['diarize'] = True
                     logger.info("Diarize模型初始化完成")
-            elif asr_method == 'FunASR' and not models_initialized['funasr']:
+            elif asr_method == 'FunASR' and not models_initialized['funasr'] and init_funasr:
                 executor.submit(init_funasr)
                 models_initialized['funasr'] = True
                 logger.info("FunASR模型初始化完成")
@@ -288,6 +301,31 @@ def do_everything(root_folder, url, num_videos=5, resolution='1080p',
 
         url = url.replace(' ', '').replace('，', '\n').replace(',', '\n')
         urls = [_ for _ in url.split('\n') if _]
+
+        # CambAI end-to-end dubbing: skip entire pipeline, single API call
+        if tts_method == 'CambAI Dub':
+            if progress_callback:
+                progress_callback(10, "CambAI 端到端配音中...")
+            try:
+                # CambAI Dub requires a URL, not a local file
+                video_url = urls[0] if urls else url
+                if video_url.endswith('.mp4') and not video_url.startswith('http'):
+                    return "CambAI Dub 需要视频URL（YouTube等），不支持本地文件", None
+
+                output_path = os.path.join(root_folder, 'camb_dubbed_video.mp4')
+                # Infer source language: if target is Chinese, source is likely English and vice versa
+                target_lang = translation_target_language
+                chinese_langs = {'简体中文', '繁体中文', '中文', 'Cantonese', '粤语'}
+                source_lang = '中文' if target_lang not in chinese_langs else 'English'
+                result = dub_video(video_url, source_lang, target_lang, output_path)
+                if progress_callback:
+                    progress_callback(100, "CambAI 配音完成!")
+                return "CambAI 端到端配音完成", output_path
+            except Exception as e:
+                stack_trace = traceback.format_exc()
+                error_msg = f"CambAI 端到端配音失败: {str(e)}\n{stack_trace}"
+                logger.error(error_msg)
+                return error_msg, None
 
         # 初始化模型（改用新的初始化函数）
         try:

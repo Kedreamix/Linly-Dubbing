@@ -3,8 +3,15 @@ import os
 import torch
 import numpy as np
 from dotenv import load_dotenv
-from .step021_asr_whisperx import whisperx_transcribe_audio
-from .step022_asr_funasr import funasr_transcribe_audio
+try:
+    from .step021_asr_whisperx import whisperx_transcribe_audio
+except ImportError:
+    whisperx_transcribe_audio = None
+try:
+    from .step022_asr_funasr import funasr_transcribe_audio
+except ImportError:
+    funasr_transcribe_audio = None
+from .step023_asr_camb import camb_transcribe_audio
 from .utils import save_wav
 import json
 import librosa
@@ -72,9 +79,15 @@ def transcribe_audio(method, folder, model_name: str = 'large', download_root='m
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     if method == 'WhisperX':
+        if whisperx_transcribe_audio is None:
+            raise ImportError('whisperx is not installed. Install it with: pip install -e submodules/whisperX')
         transcript = whisperx_transcribe_audio(wav_path, model_name, download_root, device, batch_size, diarization, min_speakers, max_speakers)
     elif method == 'FunASR':
+        if funasr_transcribe_audio is None:
+            raise ImportError('funasr is not installed. Install it with: pip install funasr')
         transcript = funasr_transcribe_audio(wav_path, device, batch_size, diarization)
+    elif method == 'CambAI':
+        transcript = camb_transcribe_audio(wav_path)
     else:
         logger.error('Invalid ASR method')
         raise ValueError('Invalid ASR method')
