@@ -280,7 +280,7 @@ WebUI参考：[https://github.com/RVC-Boss/GPT-SoVITS/tree/main/tools/uvr5](http
 
 #### FunASR
 
-**FunASR** 是一个综合性的语音识别工具包，提供广泛的语音处理功能，包括语音识别（ASR）、语音活动检测（VAD）、标点符号恢复、语言模型、说话人验证、说话人分离以及多说话者对话识别等。FunASR 尤其针对中文语音进行了优化，提供了预训练模型及其微调的便捷接口。它是语音识别领域中的重要工具，广泛应用于语音助手、自动字幕生成等场景。详细信息可参考 [FunASR 项目](https://github.com/alibaba-damo-academy/FunASR)。
+**FunASR** 是一个综合性的语音识别工具包，提供广泛的语音处理功能，包括语音识别（ASR）、语音活动检测（VAD）、标点符号恢复、语言模型、说话人验证、说话人分离以及多说话者对话识别等。FunASR 尤其针对中文语音进行了优化，提供了预训练模型及其微调的便捷接口。它是语音识别领域中的重要工具，广泛应用于语音助手、自动字幕生成等场景。详细信息可参考 [FunASR 项目](https://github.com/modelscope/FunASR)。
 
 ### 大型语言模型字幕翻译
 
@@ -357,7 +357,7 @@ WebUI参考：[https://github.com/RVC-Boss/GPT-SoVITS/tree/main/tools/uvr5](http
 - [Coqui TTS](https://github.com/coqui-ai/TTS)
 
 - [Qwen](https://github.com/QwenLM/Qwen)
-- [FunASR](https://github.com/alibaba-damo-academy/FunASR)
+- [FunASR](https://github.com/modelscope/FunASR)
 - [CosyVoice](https://github.com/FunAudioLLM/CosyVoice)
 - [Linly-Talker](https://github.com/Kedreamix/Linly-Talker)
 
