@@ -281,7 +281,7 @@ Model weights reference: [https://huggingface.co/lj1995/VoiceConversionWebUI/tre
 
 #### FunASR
 
-**FunASR** is a comprehensive speech recognition toolkit offering a wide range of speech processing features, including Automatic Speech Recognition (ASR), Voice Activity Detection (VAD), punctuation restoration, language modeling, speaker verification, speaker separation, and multi-speaker dialogue recognition. FunASR is particularly optimized for Chinese speech and offers pre-trained models with easy fine-tuning interfaces. It’s a significant tool in the field of speech recognition, widely used in voice assistants, automatic subtitle generation, and more. For more information, visit the [FunASR project](https://github.com/alibaba-damo-academy/FunASR).
+**FunASR** is a comprehensive speech recognition toolkit offering a wide range of speech processing features, including Automatic Speech Recognition (ASR), Voice Activity Detection (VAD), punctuation restoration, language modeling, speaker verification, speaker separation, and multi-speaker dialogue recognition. FunASR is particularly optimized for Chinese speech and offers pre-trained models with easy fine-tuning interfaces. It’s a significant tool in the field of speech recognition, widely used in voice assistants, automatic subtitle generation, and more. For more information, visit the [FunASR project](https://github.com/modelscope/FunASR).
 
 ### Large Language Model Translation
 
@@ -359,7 +359,7 @@ In developing this project, I referenced and drew inspiration from several outst
 
 - [Coqui TTS](https://github.com/coqui-ai/TTS)
 - [Qwen](https://github.com/QwenLM/Qwen)
-- [FunASR](https://github.com/alibaba-damo-academy/FunASR)
+- [FunASR](https://github.com/modelscope/FunASR)
 - [CosyVoice](https://github.com/FunAudioLLM/CosyVoice)
 - [Linly-Talker](https://github.com/Kedreamix/Linly-Talker)
 
